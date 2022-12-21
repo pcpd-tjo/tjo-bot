@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require("express");
 const app = express();
 app.use(express.static("public"));
@@ -16,9 +17,13 @@ const client = new Client({
 		Intents.FLAGS.GUILD_MEMBERS 
     ]
 });
-
-app.get("/", async (req,res) => {
+client.env = process.env;
+app.get("/", async (req, res) => {
 	res.json({ status: "OK | 200", message: "TJO Bot Started" })
+});
+
+app.get("/status", async (req, res) => {
+	res.json({ status: process.env.status })
 })
 
 client.on("ready", async () => {
@@ -63,4 +68,6 @@ const listener = app.listen(process.env.PORT, () => {
 });
 
 
-client.login(process.env["DISCORD_TOKEN"]);
+client.login(client.env.DISCORD_TOKEN);
+
+module.exports = app
