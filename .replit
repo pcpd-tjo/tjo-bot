@@ -1,0 +1,2 @@
+run = "node setup.js"
+language = "nix"
