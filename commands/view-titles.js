@@ -34,55 +34,55 @@ module.exports = {
 			embeds: [e]
 		})
 
-	async function fetch() {
-		let db = client.db;
-		let idOfUser = await getIdFromUsername(username);
-		const ref = db.ref(`/${idOfUser}`)
-		ref.once('value').then(async (snapshot) => {
-			let snap = snapshot.val();
-			let arr = []
-			let titlesFetched = false
-			arr.push(snap);
-			//	console.log(arr);
-			for (key in arr) {
-			//	console.log(arr[key].titles)
-			//	console.log(arr[key].titles.length)
-				let parsed = JSON.parse(arr[key].titles)
-			//	console.log(parsed)
-				for (let i in parsed) {
-					//	console.log(parsed[i])
+		async function fetch() {
+			let db = client.db;
+			let idOfUser = await getIdFromUsername(username);
+			const ref = db.ref(`/${idOfUser}`)
+			ref.once('value').then(async (snapshot) => {
+				let snap = snapshot.val();
+				let arr = []
+				let titlesFetched = false
+				arr.push(snap);
+				//	console.log(arr);
+				for (key in arr) {
+					//	console.log(arr[key].titles)
+					//	console.log(arr[key].titles.length)
+					let parsed = JSON.parse(arr[key].titles)
+					//	console.log(parsed)
+					for (let i in parsed) {
+						//	console.log(parsed[i])
 						string += "• " + parsed[i] + "\n"
-					let originalLength = arr[key].titles.length
-					let originalLengthWithoutOne = originalLength - 1
-					if (string != "" && string.length == originalLength || string.length == originalLengthWithoutOne) {
-						e.setTitle(`Showing ${username}\'s titles`);
-						e.setDescription(string);
-						e.setColor("GREEN");
-						let count = 0
-						count += 1
-						if (count == 1) {
-							await interaction.deleteReply()
-						
-							await interaction.followUp({
-								embeds: [e]
-							})
+						let originalLength = arr[key].titles.length
+						let originalLengthWithoutOne = originalLength - 1
+						if (string != "" && string.length == originalLength || string.length == originalLengthWithoutOne) {
+							e.setTitle(`Showing ${username}\'s titles`);
+							e.setDescription(string);
+							e.setColor("GREEN");
+							let count = 0
+							count += 1
+							if (count == 1) {
+								await interaction.deleteReply()
+
+								await interaction.followUp({
+									embeds: [e]
+								})
+							}
+
+						} else {
+							console.log(string, string.length, parsed.length)
 						}
-						
-					} else {
-						console.log(string, string.length, parsed.length)
 					}
 				}
+
+			}), (errorObject) => {
+				console.log('The read failed: ' + errorObject.name);
 			}
-			
-		}), (errorObject) => {
-			console.log('The read failed: ' + errorObject.name);
 		}
-	}
-		
-fetch()
-			
-		
-			
+
+		fetch()
+
+
+
 
 
 
