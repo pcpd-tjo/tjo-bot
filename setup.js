@@ -34,7 +34,7 @@ client.on("ready", async () => {
 	// should be a variable but not used?
 });
 var admin = require("firebase-admin");
-let serviceAccount = process.env.SERVICE_ACCOUNT
+let serviceAccount = JSON.parse(process.env.SERVICE_ACCOUNT);
 admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount),
 	databaseURL: "https://titles-system-default-rtdb.firebaseio.com"
