@@ -20,11 +20,8 @@ const client = new Client({
 client.env = process.env;
 app.get("/", async (req, res) => {
 	res.json({ status: "OK | 200", message: "TJO Bot Started" })
+	client.login(process.env.DISCORD_TOKEN);
 });
-
-app.get("/status", async (req, res) => {
-	res.json({ status: process.env.status })
-})
 
 client.on("ready", async () => {
 	console.log("Bot Started");
@@ -68,6 +65,5 @@ const listener = app.listen(process.env.PORT, () => {
 });
 
 
-client.login(client.env.DISCORD_TOKEN);
 
 module.exports = app
