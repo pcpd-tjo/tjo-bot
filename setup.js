@@ -19,8 +19,8 @@ const client = new Client({
 });
 client.env = process.env;
 app.get("/", async (req, res) => {
+	await client.login(process.env.DISCORD_TOKEN);
 	res.json({ status: "OK | 200", message: "TJO Bot Started" })
-	client.login(process.env.DISCORD_TOKEN);
 });
 
 client.on("ready", async () => {
