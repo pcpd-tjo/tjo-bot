@@ -1,4 +1,7 @@
 .env
 s_c.json
-.vscode
-node_modules
+.vscode/
+node_modules/
+
+.replit
+replit.nix
