@@ -37,7 +37,7 @@ module.exports = {
 		async function fetch() {
 			let db = client.db;
 			let idOfUser = await getIdFromUsername(username);
-			const ref = db.ref(`/${idOfUser}`)
+			const ref = db.ref(`/players/${idOfUser}`)
 			ref.once('value').then(async (snapshot) => {
 				let snap = snapshot.val();
 				let arr = []
