@@ -1,5 +1,5 @@
 .env
 s_c.json
-.vscode
 vercel.json
+.vscode
 node_modules
