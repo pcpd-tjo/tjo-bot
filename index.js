@@ -3,6 +3,9 @@ const express = require("express");
 const app = express();
 app.use(express.static("public"));
 
+function func() {
+  console.log("OMGOMGOMGOMG")
+}
 app.get("/", (req, res) => {
   res.send(process.env.STATUS)
 })
@@ -12,4 +15,4 @@ const listener = app.listen(process.env.PORT, () => {
   console.log(listener.address());
 });
 
-module.exports = app
+module.exports = func, app 
