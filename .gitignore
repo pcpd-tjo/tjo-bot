@@ -1,3 +1,5 @@
 .env
 s_c.json
+.vscode
+vercel.json
 node_modules
