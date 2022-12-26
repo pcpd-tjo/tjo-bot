@@ -54,7 +54,7 @@ client.on(Events.InteractionCreate, async interaction => {
 
 
 app.get("/", (req, res) => {
-  res.send("TJO BOT ONLINE")
+  res.sendStatus(200).json({ "message": "TJO BOT ONLINE", "status": res.statusCode || "200" })
 })
 
 const listener = app.listen(process.env.PORT, () => {
