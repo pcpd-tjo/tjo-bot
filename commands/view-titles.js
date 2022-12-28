@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const wait = require("node:timers/promises").setTimeout;
 
-const { getIdFromUsername } = require("noblox.js");
+const { getIdFromUsername, getUsernameFromId } = require("noblox.js");
 
 const { EmbedBuilder } = require("discord.js");
 
@@ -27,6 +27,7 @@ module.exports = {
 		let username = interaction.options.getString("username");
 		await interaction.deferReply();
 		const user_id = await getIdFromUsername(username);
+		username = await getUsernameFromId(user_id);
 		if (user_id) {
 			const ref = database.ref(`players/${user_id}/ownedTitles/`);
 			ref.once("value").then((snapshot) => {
