@@ -1,99 +1,59 @@
-const {
-	SlashCommandBuilder
-} = require('@discordjs/builders');
+const { SlashCommandBuilder } = require("@discordjs/builders");
+const wait = require("node:timers/promises").setTimeout;
 
-const {
-	getIdFromUsername
-} = require("noblox.js");
+const { getIdFromUsername } = require("noblox.js");
 
-const {
-	MessageEmbed
-} = require('discord.js');
+const { EmbedBuilder } = require("discord.js");
 
 let command = new SlashCommandBuilder();
 
 module.exports = {
-	data:
-		command.setName('view-crystals')
-			.setDescription('Lists what crystals a specific player owns')
-			.addStringOption((option) =>
-				option
-					.setName('username')
-					.setDescription('The username of the player whose crystals you want to view')
-					.setRequired(true)
-			),
+	data: command
+		.setName("view-crystals")
+		.setDescription("Lists what crystals a specific player owns")
+		.addStringOption((option) =>
+			option
+				.setName("username")
+				.setDescription(
+					"The username of the player whose crystals you want to view"
+				)
+				.setRequired(true)
+		),
 
 	async execute(interaction, client) {
-		const e = new MessageEmbed();
-		let username = interaction.options.getString('username')
-		let string = ""
-
-		const loading_emoji = client.emojis.cache.find(emoji => emoji.name === "loading");
-		e.setDescription(`Retrieving **${username}\'s** crystals ${loading_emoji}`)
-		interaction.reply({
-			embeds: [e]
-		})
-
-		async function fetch() {
-			let db = client.db;
-			let idOfUser = await getIdFromUsername(username);
-			if (idOfUser) {
-				const ref = db.ref(`/${idOfUser}`)
-				ref.once('value').then(async (snapshot) => {
-					let snap = snapshot.val();
-					let arr = []
-					arr.push(snap);
-					//	console.log(arr);
-					for (key in arr) {
-						//	console.log(arr[key].crystals)
-						//	console.log(arr[key].crystals.length)
-						let parsed = JSON.parse(arr[key].crystals)
-						//	console.log(parsed)
-						for (let i in parsed) {
-							//	console.log(parsed[i])
-							string += "• " + parsed[i] + "\n"
-							let originalLength = arr[key].crystals.length
-							let originalLengthWithoutOne = originalLength - 1
-							if (string != "" && string.length == originalLength || string.length == originalLengthWithoutOne) {
-								e.setTitle(`Showing ${username}\'s crystals`);
-								e.setDescription(string);
-								e.setColor("GREEN");
-								let count = 0
-								count += 1
-								if (count == 1) {
-									await interaction.deleteReply()
-
-									await interaction.followUp({
-										embeds: [e]
-									})
-								}
-
-							} else {
-								console.log(string, string.length, parsed.length)
-							}
-						}
+		const embed = new EmbedBuilder();
+		let database = client.db;
+		let string = "";
+		let username = interaction.options.getString("username");
+		await interaction.deferReply();
+		const user_id = await getIdFromUsername(username);
+		if (user_id) {
+			const ref = database.ref(`players/${user_id}/ownedCrystals/`);
+			ref.once("value").then((snapshot) => {
+				console.log(ref)
+				let snapshot_values = snapshot.val();
+				//console.log(snapshot_values);
+				if (snapshot_values) {
+					for (value in snapshot_values) {
+						//console.log(value);
+						//console.log(snapshot_values[value]);
+						let crystal = snapshot_values[value];
+						string += `• ${crystal}\n`;
 					}
-
-				}), (errorObject) => {
-					console.log('The read failed: ' + errorObject.name);
+					//console.log("LOOP THROUGH VALUES IS OVER")
+				} else {
+					string = `No crystals found for ${username}`
 				}
-			}
-		}
-
-		fetch()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+			}).then(async () => {
+				await wait(4000)
+				//console.log(string)
+				embed.setTitle(`${username}\'s Crystals `);
+				embed.setDescription(string == "" ? `No crystals found for ${username}` : string);
+				embed.setColor("Green")
+				await interaction.editReply({
+					embeds: [embed],
+				});
+			})		
 	}
-}
+	},
+};
