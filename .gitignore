@@ -1,7 +1,0 @@
-.env
-s_c.json
-.vscode/
-node_modules/
-
-.replit
-replit.nix
