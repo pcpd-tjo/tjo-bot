@@ -3,7 +3,7 @@ require("dotenv").config;
 const { Client, Events, GatewayIntentBits, Collection } = require('discord.js');
 const expressServer = require("./server.js");
 const initDatabase = require('./setupDatabase.js');
-await expressServer();
+expressServer();
 
 const { clientId } = require("./config.json");
 
