@@ -2,8 +2,8 @@
 require("dotenv").config;
 const { Client, Events, GatewayIntentBits, Collection } = require('discord.js');
 const expressServer = require("./server.js");
-const init = require('./setupDatabase.js');
-expressServer();
+const initDatabase = require('./setupDatabase.js');
+await expressServer();
 
 const { clientId } = require("./config.json");
 
@@ -11,7 +11,7 @@ const { clientId } = require("./config.json");
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 (async () => {
-	client.db = init();
+	client.db = initDatabase();
 	const { cacheTitles } = require('./functions/titles.js')
 	await cacheTitles(client);
 	const { cacheCrystals } = require('./functions/crystals.js')
