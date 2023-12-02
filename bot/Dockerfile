@@ -19,7 +19,7 @@ COPY . .
 EXPOSE 3000
 #RUN chown -R root /usr/src/bot
 
-RUN sudo apt-get update -y
-RUN sudo apt-get install -y python3
-RUN sudo apt install -y python3-pip
+RUN apt-get update -y
+RUN apt-get install -y python3
+RUN apt install -y python3-pip
 CMD ["npm", "test"]
