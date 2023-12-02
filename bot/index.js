@@ -1,4 +1,5 @@
 /* eslint-disable no-undef */
+require("dotenv").config;
 const { Client, Events, GatewayIntentBits, Collection } = require('discord.js');
 const expressServer = require("./server.js");
 const init = require('./setupDatabase.js');
@@ -10,7 +11,7 @@ const { clientId } = require("./config.json");
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 (async () => {
-	client.db = await init();
+	client.db = init();
 	const { cacheTitles } = require('./functions/titles.js')
 	await cacheTitles(client);
 	const { cacheCrystals } = require('./functions/crystals.js')
@@ -43,20 +44,11 @@ for (const file of commandFiles) {
 const rest = new REST().setToken(token);
 const TEST_SERVER_ID = "986004377561088080";
 
-// and deploy your commands!
 (async () => {
 	try {
 		console.log(`Started refreshing x application (/) commands.`);
 		commands = JSON.stringify(commands);
 		commands = JSON.parse(commands)
-		//await rest.put(
-		//	Routes.applicationCommands(clientId),
-		//	{ body: [] },
-		//);
-		//await rest.put(
-		//	Routes.applicationGuildCommands(clientId,TEST_SERVER_ID),
-		//	{ body: new Object() },
-		//);
 		const data = await rest.put(
 			Routes.applicationGuildCommands(clientId, TEST_SERVER_ID),
 			{ body: commands },
