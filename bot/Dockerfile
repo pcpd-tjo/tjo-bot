@@ -1,5 +1,6 @@
 FROM ubuntu:latest
 ENV NODE_VERSION=16.13.0
+USER root
 RUN apt install -y curl
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 ENV NVM_DIR=/root/.nvm
@@ -17,8 +18,6 @@ COPY . .
 EXPOSE 3000
 RUN chown -R node /usr/src/bot
 
-
-USER root
 RUN sudo apt-get update -y
 RUN sudo apt-get install -y python3
 RUN sudo apt install -y python3-pip
