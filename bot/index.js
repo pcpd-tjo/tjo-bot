@@ -43,7 +43,7 @@ for (const file of commandFiles) {
 }
 
 const rest = new REST().setToken(token);
-const TEST_SERVER_ID = "986004377561088080";
+//const TEST_SERVER_ID = "986004377561088080";
 
 (async () => {
 	try {
@@ -51,7 +51,7 @@ const TEST_SERVER_ID = "986004377561088080";
 		commands = JSON.stringify(commands);
 		commands = JSON.parse(commands)
 		const data = await rest.put(
-			Routes.applicationGuildCommands(clientId, TEST_SERVER_ID),
+			Routes.applicationCommands(clientId),
 			{ body: commands },
 		);
 
