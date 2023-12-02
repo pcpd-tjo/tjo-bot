@@ -1,5 +1,5 @@
 FROM ubuntu:latest
-ENV NODE_VERSION=16.13.0
+ENV NODE_VERSION=20.10.0
 USER root
 RUN apt-get update
 RUN apt-get install -y curl
