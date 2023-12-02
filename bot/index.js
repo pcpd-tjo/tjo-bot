@@ -7,6 +7,7 @@ expressServer();
 
 const { clientId } = require("./config.json");
 
+const token = process.env.TOKEN;
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -85,4 +86,4 @@ client.on(Events.InteractionCreate, async interaction => {
 });
 
 // Log in to Discord with your client's token
-client.login(process.env.TOKEN);
+client.login(token);
