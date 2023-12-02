@@ -1,5 +1,5 @@
+/* eslint-disable no-undef */
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const wait = require("node:timers/promises").setTimeout;
 
 const { getIdFromUsername, getUsernameFromId } = require("noblox.js");
 
@@ -45,7 +45,7 @@ module.exports = {
 			}).then(async () => {
 				await wait(4000)
 				//console.log(string)
-				embed.setTitle(`${username}\'s Titles `);
+				embed.setTitle(`${username}'s Titles `);
 				embed.setDescription(string == "" ? `No Titles found for ${username}` : string);
 				embed.setColor("Green")
 				await interaction.editReply({

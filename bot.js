@@ -45,10 +45,13 @@ module.exports = async (client) => {
 				Routes.applicationCommands(clientId), {
 				body: commands
 			}
-			).then(() => console.log('Successfully reloaded application (/) commands.'))
-
+			)
+			.then(() => console.log('Successfully reloaded application (/) commands.'))
+			.catch( (error) => {
+				console.dir(error.rawError.errors);
+			})
 		} catch (error) {
-			console.error(error);
+			console.dir(error.rawError.errors);
 		}
 	})();
 

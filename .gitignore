@@ -2,6 +2,10 @@
 s_c.json
 .vscode/
 node_modules/
-
+./commands/
 .replit
 replit.nix
+
+config.json
+test.js
+package-lock.json

@@ -1,6 +1,7 @@
-import express from "express";
+/* eslint-disable no-undef */
+const express = require("express");
 const app = express();
-export default async function () {    
+module.exports = async function () {    
     app.get("/", (req, res) => {
         if (res.statusCode == 200) {
           res.json({ message: "TJO BOT ONLINE", status: res.statusCode});
