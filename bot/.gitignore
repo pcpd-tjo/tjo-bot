@@ -1,9 +1,0 @@
-.env
-.vscode/
-node_modules/
-commands/
-.replit
-replit.nix
-
-test.js
-package-lock.json
