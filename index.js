@@ -13,7 +13,9 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 // initial
 (async () => {
-	client.db = initDatabase();
+	if (!client.db) {
+		client.db = initDatabase();
+	}
 	
 	const { cacheTitles } = require('./functions/titles.js')
 	const { cacheCrystals } = require('./functions/crystals.js')
