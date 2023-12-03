@@ -14,15 +14,17 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 // initial
 (async () => {
 	client.db = initDatabase();
+	if (client.db) {
+		const { cacheTitles } = require('./functions/titles.js')
+		const { cacheCrystals } = require('./functions/crystals.js')
 
-	const { cacheTitles } = require('./functions/titles.js')
-	const { cacheCrystals } = require('./functions/crystals.js')
+		client.cacheTitles = (async client => await cacheTitles(client))
+		client.cacheCrystals = (async client => await cacheCrystals(client))
 
-	client.cacheTitles = (async client => await cacheTitles(client))
-	client.cacheCrystals = (async client => await cacheCrystals(client))
+		await cacheTitles(client);
+		await cacheCrystals(client);
+	}
 
-	await cacheTitles(client);
-	await cacheCrystals(client);
 })()
 
 // updating every 15 minutes
