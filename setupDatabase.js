@@ -9,7 +9,7 @@ const init = () => {
                 JSON.parse(process.env.SERVICE_ACCOUNT)
             ),
             databaseURL: "https://tjo-database-365a3-default-rtdb.firebaseio.com"
-        })
+        }, "tjo-database")
     
         db = admin.database();
     
