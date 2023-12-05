@@ -31,7 +31,7 @@ module.exports = {
 			embed.setTitle(`${username}'s Crystals `);
 			embed.setDescription(playerCrystals.length > 0 ? playerCrystals.join("\n") : `No crystals found for ${username}`);
 			embed.setColor("Green")
-			await interaction.editReply({
+			await interaction.reply({
 				embeds: [embed],
 			});
 		}
