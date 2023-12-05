@@ -1,4 +1,4 @@
-name: Build Static Image
+name: Deploy to coolify
 on:
   push:
     branches: ["main"]
