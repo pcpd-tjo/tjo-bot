@@ -27,9 +27,12 @@ module.exports = {
 		if (user_id) {
 			const playerTitles = interaction.client.cachedTitles[user_id] || [];
 			let description = "";
-			for (let i = 0; i < playerTitles.length; i++) {
-				description += `• ${playerTitles[i]}\n`;
+			if (playerTitles.length > 0) {
+				for (let i = 0; i < playerTitles.length; i++) {
+					description += `• ${playerTitles[i]}\n`;
+				}
 			}
+
 			embed.setDescription(description.length > 0 ? description : `No Titles were found for ${username} (${user_id})`)
 			embed.setColor("Green")
 			await interaction.reply({

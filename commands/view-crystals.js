@@ -29,7 +29,7 @@ module.exports = {
 			const playerCrystals = interaction.client.cachedCrystals[user_id] || [];
 			console.log(playerCrystals);
 			embed.setTitle(`${username}'s Crystals `);
-			embed.setDescription(playerCrystals != [] ? playerCrystals.join("\n") : `No crystals found for ${username}`);
+			embed.setDescription(playerCrystals.length > 0 ? playerCrystals.join("\n") : `No crystals found for ${username}`);
 			embed.setColor("Green")
 			await interaction.editReply({
 				embeds: [embed],
