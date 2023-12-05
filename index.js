@@ -1,13 +1,13 @@
 /* eslint-disable no-undef */
-require("dotenv").config;
-const { Client, Events, GatewayIntentBits, Collection } = require('discord.js');
+require("dotenv").config();
+const { Client, Events, GatewayIntentBits, Collection, REST, Routes } = require('discord.js');
 const expressServer = require("./server.js");
 const initDatabase = require('./setupDatabase.js');
 expressServer();
 
 const { clientId } = require("./config.json");
 
-const token = process.env.TOKEN;
+const { TOKEN } = process.env;
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -36,14 +36,13 @@ setInterval(async () => {
 	await cacheCrystals(client);
 }, 900);
 
-const { REST, Routes } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
 
 client.commands = new Collection();
 let commands = [];
 
-const commandsPath = path.join(__dirname, 'new-commands');
+const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
@@ -58,7 +57,7 @@ for (const file of commandFiles) {
 	}
 }
 
-const rest = new REST().setToken(token);
+const rest = new REST().setToken(TOKEN);
 //const TEST_SERVER_ID = "986004377561088080";
 
 (async () => {
@@ -66,6 +65,10 @@ const rest = new REST().setToken(token);
 		console.log(`Started refreshing x application (/) commands.`);
 		commands = JSON.stringify(commands);
 		commands = JSON.parse(commands)
+		await rest.put(
+			Routes.applicationCommands(clientId),
+			{ body: {} },
+		);
 		const data = await rest.put(
 			Routes.applicationCommands(clientId),
 			{ body: commands },
@@ -77,8 +80,6 @@ const rest = new REST().setToken(token);
 	}
 })();
 
-// When the client is ready, run this code (only once)
-// We use 'c' for the event parameter to keep it separate from the already defined 'client'
 client.once(Events.ClientReady, c => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
 });
@@ -90,7 +91,6 @@ client.on(Events.InteractionCreate, async interaction => {
 
 	if (!command) {
 		console.error(`No command matching ${interaction.commandName} was found.`);
-		return;
 	}
 
 	try {
@@ -102,4 +102,4 @@ client.on(Events.InteractionCreate, async interaction => {
 });
 
 // Log in to Discord with your client's token
-client.login(token);
+client.login(TOKEN);

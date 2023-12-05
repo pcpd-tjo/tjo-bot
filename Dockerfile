@@ -17,7 +17,6 @@ WORKDIR /usr/src/bot
 COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
 COPY . .
 EXPOSE 3000
-#RUN chown -R root /usr/src/bot
 
 RUN apt-get update -y
 RUN apt-get install -y python3
