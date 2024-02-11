@@ -18,7 +18,7 @@ async function FetchCrystals(client, playerID) {
     } else {
         const playersRef = ref(client.db, 'players/' + playerID);
         onValue(playersRef, (snapshot) => {
-            const players = snapshot.val();
+            const player = snapshot.val();
             return player.ownedCrystals;
 
         });
