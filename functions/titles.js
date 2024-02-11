@@ -3,7 +3,7 @@
 
 const { ref, onValue, set } = require("firebase/database")
 
-let titles = {}
+/* let titles = {}
 async function FetchTitles(client) {
   const playersRef = ref(client.db, 'players/');
   onValue(playersRef, (snapshot) => {
@@ -15,6 +15,31 @@ async function FetchTitles(client) {
     }
   });
   return titles;
+} */
+
+const { db } = require("../index");
+
+let titles = {}
+async function FetchTitles(client, playerID) {
+  if (!playerID) {
+    const playersRef = ref(db, 'players/');
+    onValue(playersRef, (snapshot) => {
+      const players = snapshot.val();
+      for (let player in players) {
+        const userId = player;
+        player = players[player];
+        titles[userId] = player.ownedTitles || [];
+      }
+    });
+    return titles;
+  } else {
+    const playersRef = ref(db, 'players/' + playerID);
+    onValue(playersRef, (snapshot) => {
+      const player = snapshot.val();
+      return player.ownedTitles;
+
+    });
+  }
 }
 
 async function CacheTitles(client) {
@@ -26,6 +51,7 @@ async function FetchCachedTitlesWithoutClient() {
 }
 
 const isStringsArray = arr => arr.every(i => typeof i === "string")
+
 async function AddTitles(client, userId, titles) {
   if (typeof titles == "object" && isStringsArray(titles)) {
     const titlesRef = ref(`players/${userId}/ownedTitles`);

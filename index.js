@@ -2,7 +2,7 @@
 require("dotenv").config();
 const { Client, Events, GatewayIntentBits, Collection, REST, Routes } = require('discord.js');
 const expressServer = require("./server.js");
-const initDatabase = require('./setupDatabase.js');
+//const initDatabase = require('./setupDatabase.js');
 expressServer();
 
 const { clientId } = require("./config.json");
@@ -11,8 +11,20 @@ const { TOKEN } = process.env;
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-// initial
-(async () => {
+
+const { initializeApp } = require("firebase/app");
+const { getDatabase } = require("firebase/database");
+
+const firebaseConfig = {
+	databaseURL: "https://tjo-database-365a3-default-rtdb.firebaseio.com",
+};
+
+const app = initializeApp(firebaseConfig);
+
+const database = getDatabase(app);
+
+client.db = database;
+/* (async () => {
 	client.db = initDatabase();
 	if (client.db) {
 		const { cacheTitles } = require('./functions/titles.js')
@@ -25,16 +37,15 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 		await cacheCrystals(client);
 	}
 
-})()
+})() */
 
 // updating every 15 minutes
-setInterval(async () => {
-	client.db = initDatabase();
+/* setInterval(async () => {
 	const { cacheTitles } = require('./functions/titles.js')
 	await cacheTitles(client);
 	const { cacheCrystals } = require('./functions/crystals.js')
 	await cacheCrystals(client);
-}, 900);
+}, 900); */
 
 const fs = require('node:fs');
 const path = require('node:path');
@@ -105,3 +116,5 @@ client.on(Events.InteractionCreate, async interaction => {
 
 // Log in to Discord with your client's token
 client.login(TOKEN);
+
+module.exports = { db: database }
