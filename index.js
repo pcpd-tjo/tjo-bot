@@ -65,10 +65,12 @@ const rest = new REST().setToken(TOKEN);
 		console.log(`Started refreshing x application (/) commands.`);
 		commands = JSON.stringify(commands);
 		commands = JSON.parse(commands)
+		/* 		
 		await rest.put(
 			Routes.applicationCommands(clientId),
 			{ body: {} },
-		);
+		); 
+		*/
 		const data = await rest.put(
 			Routes.applicationCommands(clientId),
 			{ body: commands },
