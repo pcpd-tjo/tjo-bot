@@ -23,6 +23,10 @@ async function CacheCrystals(client) {
     client.cachedCrystals = await FetchCrystals(client);
 }
 
+async function FetchCachedCrystalsWithoutClient() {
+    return crystals;
+}
+
 const isStringsArray = arr => arr.every(i => typeof i === "string")
 
 async function AddCrystals(client, userId, crystals) {
