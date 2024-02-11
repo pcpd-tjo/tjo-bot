@@ -3,20 +3,32 @@
 const { ref, onValue, set } = require("firebase/database")
 
 let crystals = {}
-async function FetchCrystals(client) {
+async function FetchCrystals(client, playerID) {
 
-    const playersRef = ref(client.db, 'players/');
-    onValue(playersRef, (snapshot) => {
-        const players = snapshot.val();
-        for (let player in players) {
-            const userId = player;
-            player = players[player];
-            crystals[userId] = player.ownedCrystals || [];
-        }
-    });
+    if (!playerID) {
+        const playersRef = ref(client.db, 'players/');
+        onValue(playersRef, (snapshot) => {
+            const players = snapshot.val();
+            for (let player in players) {
+                const userId = player;
+                player = players[player];
+                crystals[userId] = player.ownedCrystals || [];
+            }
+        });
+    } else {
+        const playersRef = ref(client.db, 'players/' + playerID);
+        onValue(playersRef, (snapshot) => {
+            const players = snapshot.val();
+            return player.ownedCrystals;
+
+        });
+    }
+
 
     return crystals;
 }
+
+
 
 async function CacheCrystals(client) {
     client.cachedCrystals = [];
