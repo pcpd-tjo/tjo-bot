@@ -2,7 +2,7 @@
 /* eslint-disable no-undef */
 const { ref, onValue, set } = require("firebase/database")
 
-const { db } = require("../index");
+const { db } = require("../database");
 
 let crystals = {}
 async function FetchCrystals(playerID) {

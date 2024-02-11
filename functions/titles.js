@@ -17,7 +17,7 @@ async function FetchTitles(client) {
   return titles;
 } */
 
-const { db } = require("../index");
+const { db } = require("../database")
 
 let titles = {}
 async function FetchTitles(client, playerID) {
