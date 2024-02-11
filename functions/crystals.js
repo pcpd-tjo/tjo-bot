@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-labels */
 /* eslint-disable no-undef */
 const { ref, onValue, set } = require("firebase/database")
-
+let crystals = {}
 async function FetchCrystals(client) {
-    let crystals = {}
+
     const playersRef = ref(client.db, 'players/');
     onValue(playersRef, (snapshot) => {
         const players = snapshot.val();

@@ -11,7 +11,7 @@ async function FetchTitles(client) {
     for (let player in players) {
       const userId = player;
       player = players[player];
-      crystals[userId] = player.ownedTitles || [];
+      titles[userId] = player.ownedTitles || [];
     }
   });
   return titles;
