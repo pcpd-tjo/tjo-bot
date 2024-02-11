@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-labels */
 /* eslint-disable no-undef */
 const { ref, onValue, set } = require("firebase/database")
+
 let crystals = {}
 async function FetchCrystals(client) {
 
@@ -33,6 +34,7 @@ async function AddCrystals(client, userId, crystals) {
 
 module.exports = {
     fetch: FetchCrystals,
+    fetchCachedCrystalsWithoutClient: FetchCachedCrystalsWithoutClient,
     cacheCrystals: CacheCrystals,
     addCrystals: AddCrystals,
 }

@@ -4,6 +4,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { getIdFromUsername, getUsernameFromId } = require("noblox.js");
 
 const { EmbedBuilder } = require("discord.js");
+const { fetchCachedCrystalsWithoutClient } = require('../functions/crystals.js')
 
 let command = new SlashCommandBuilder();
 command.setName("view-crystals")
@@ -26,7 +27,7 @@ module.exports = {
 		const user_id = await getIdFromUsername(username);
 		username = await getUsernameFromId(user_id);
 		if (user_id) {
-			const playerCrystals = interaction.client.cachedCrystals[user_id] || [];
+			const playerCrystals = fetchCachedCrystalsWithoutClient()[user_id] || [] //interaction.client.cachedCrystals[user_id] || [];
 			console.log(playerCrystals);
 			//embed.setTitle(`${username}'s Crystals `);
 			embed.setDescription(playerCrystals.length > 0 ? playerCrystals.join("\n") : `No Crystals were found for ${username} (${user_id})`);
