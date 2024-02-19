@@ -1,11 +1,11 @@
-/* eslint-disable no-undef */
-const { SlashCommandBuilder } = require("@discordjs/builders");
+import { SlashCommandBuilder } from "@discordjs/builders";
 
-const { getIdFromUsername } = require("noblox.js");
+import noblox from 'noblox.js';
+const { getIdFromUsername, getUsernameFromId } = noblox;
 
-const { EmbedBuilder } = require("discord.js");
+import { EmbedBuilder } from "discord.js";
 
-const { fetch } = require('../functions/titles.js')
+import { getPlayerTitles } from '../controllers/titles.controller.js';
 
 let command = new SlashCommandBuilder();
 command.setName("view-titles")
@@ -19,26 +19,25 @@ command.addStringOption((option) =>
 		.setRequired(true)
 )
 
-module.exports = {
-	data: command,
-	async execute(interaction) {
-		const embed = new EmbedBuilder();
-		let username = interaction.options.getString("username");
-		//await interaction.deferReply();
-		const user_id = await getIdFromUsername(username);
-		if (user_id) {
-			const playerTitles = await fetch(user_id) || [] //interaction.client.cachedTitles[user_id] || [];
-			let description = "";
-			if (playerTitles.length > 0) {
-				for (let i = 0; i < playerTitles.length; i++) {
-					description += `• ${playerTitles[i]}\n`;
-				}
-			}
-			embed.setDescription(description.length > 0 ? description : `No Titles were found for ${username} (${user_id})`)
-			embed.setColor("Green")
-			await interaction.reply({
-				embeds: [embed],
-			});
-		}
+const data = command;
+
+const execute = async (interaction) => {
+	const embed = new EmbedBuilder();
+	let username = interaction.options.getString("username");
+	const user_id = await getIdFromUsername(username);
+	username = await getUsernameFromId(user_id);
+	if (user_id) {
+		const playerTitles = await getPlayerTitles(user_id);
+		const isZeroLength = playerTitles.length == 0;
+		embed.setTitle(`${username}'s Titles`)
+		embed.setDescription(isZeroLength ? `No Titles were found for ${username} (${user_id})` : `- ${playerTitles.join("\n- ")}`);
+		embed.setColor(isZeroLength ? 'Red' : 'Green');
+		await interaction.reply({
+			embeds: [embed],
+		});
 	}
-};
+}
+export default {
+	data,
+	execute
+}

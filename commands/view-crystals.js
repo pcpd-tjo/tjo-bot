@@ -1,10 +1,11 @@
-/* eslint-disable no-undef */
-const { SlashCommandBuilder } = require("@discordjs/builders");
+import { SlashCommandBuilder } from "@discordjs/builders";
 
-const { getIdFromUsername, getUsernameFromId } = require("noblox.js");
+import noblox from 'noblox.js';
+const { getIdFromUsername, getUsernameFromId } = noblox;
 
-const { EmbedBuilder } = require("discord.js");
-const { fetch } = require('../functions/crystals.js')
+import { EmbedBuilder } from "discord.js";
+
+import { getPlayerCrystals } from '../controllers/crystals.controller.js';
 
 let command = new SlashCommandBuilder();
 command.setName("view-crystals")
@@ -18,23 +19,26 @@ command.addStringOption((option) =>
 		.setRequired(true)
 )
 
-module.exports = {
-	data: command,
-	async execute(interaction) {
-		const embed = new EmbedBuilder();
-		let username = interaction.options.getString("username");
-		//await interaction.deferReply();
-		const user_id = await getIdFromUsername(username);
-		username = await getUsernameFromId(user_id);
-		if (user_id) {
-			const playerCrystals = (await fetch(user_id)) || [] //fetchCachedCrystalsWithoutClient()[user_id] || [] //interaction.client.cachedCrystals[user_id] || [];
-			console.log(playerCrystals);
-			//embed.setTitle(`${username}'s Crystals `);
-			embed.setDescription(playerCrystals.length > 0 ? playerCrystals.join("\n") : `No Crystals were found for ${username} (${user_id})`);
-			embed.setColor("Green")
-			await interaction.reply({
-				embeds: [embed],
-			});
-		}
-	},
-};
+const data = command;
+
+const execute = async (interaction) => {
+	const embed = new EmbedBuilder();
+	let username = interaction.options.getString("username");
+	const user_id = await getIdFromUsername(username);
+	username = await getUsernameFromId(user_id);
+	if (user_id) {
+		const playerCrystals = await getPlayerCrystals(user_id)
+		const isZeroLength = playerCrystals.length == 0;
+		embed.setTitle(`${username}'s Crystals`)
+		embed.setDescription(isZeroLength ? `No Crystals were found for ${username} (${user_id})` : `- ${playerCrystals.join("\n- ")}`);
+		embed.setColor(isZeroLength ? 'Red' : 'Green');
+		await interaction.reply({
+			embeds: [embed],
+		});
+	}
+}
+
+export default {
+	data,
+	execute
+}

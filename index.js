@@ -1,86 +1,57 @@
 /* eslint-disable no-undef */
-require("dotenv").config();
-const { Client, Events, GatewayIntentBits, Collection, REST, Routes } = require('discord.js');
-const expressServer = require("./server.js");
-//const initDatabase = require('./setupDatabase.js');
-expressServer();
+import { config } from 'dotenv';
+import { Client, Events, GatewayIntentBits, Collection, REST, Routes } from 'discord.js';
+import { readdirSync } from 'fs';
 
-const { clientId } = require("./config.json");
+import expressServer from "./server.js";
+
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+
+import { clientId } from "./config.js";
+
+// allows process.env to be used during runtime
+config({ path: './.env' });
+
+// starts the epxress server
+expressServer();
 
 const { TOKEN } = process.env;
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-
-const { initializeApp } = require("firebase/app");
-const { getDatabase } = require("firebase/database");
-
-const firebaseConfig = {
-	databaseURL: "https://tjo-database-365a3-default-rtdb.firebaseio.com",
-};
-
-const app = initializeApp(firebaseConfig);
-
-const database = getDatabase(app);
-
-client.db = database;
-/* (async () => {
-	client.db = initDatabase();
-	if (client.db) {
-		const { cacheTitles } = require('./functions/titles.js')
-		const { cacheCrystals } = require('./functions/crystals.js')
-
-		client.cacheTitles = (async client => await cacheTitles(client))
-		client.cacheCrystals = (async client => await cacheCrystals(client))
-
-		await cacheTitles(client);
-		await cacheCrystals(client);
-	}
-
-})() */
-
-// updating every 15 minutes
-/* setInterval(async () => {
-	const { cacheTitles } = require('./functions/titles.js')
-	await cacheTitles(client);
-	const { cacheCrystals } = require('./functions/crystals.js')
-	await cacheCrystals(client);
-}, 900); */
-
-const fs = require('node:fs');
-const path = require('node:path');
-
 client.commands = new Collection();
 let commands = [];
 
-const commandsPath = path.join(__dirname, 'commands');
-const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const commandsPath = join(__dirname, "commands");
+const commandFiles = readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
-	const filePath = path.join(commandsPath, file);
-	const command = require(filePath);
-	if ('data' in command && 'execute' in command) {
-		//console.log(command.data.name,command);
-		client.commands.set(command.data.name, command);
-		commands.push(command.data)
-	} else {
-		console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+	const filePath = join(commandsPath, file);
+	try {
+		const {default: command} = await import(`./commands/${file}`)
+		if (command.data) {
+			client.commands.set(command.data.name, command);
+			commands.push(command.data);
+		} else {
+			console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+		}
+	} catch (error) {
+		console.error(`Error loading command at ${filePath}:`, error);
 	}
 }
 
-const rest = new REST().setToken(TOKEN);
-//const TEST_SERVER_ID = "986004377561088080";
+const rest = new REST({ version: '10' }).setToken(TOKEN);
 
 (async () => {
 	try {
 		console.log(`Started refreshing x application (/) commands.`);
 		commands = JSON.stringify(commands);
 		commands = JSON.parse(commands)
-
-		await rest.put(
-			Routes.applicationCommands(clientId),
-			{ body: {} },
-		);
 
 		const data = await rest.put(
 			Routes.applicationCommands(clientId),

@@ -1,17 +1,18 @@
-/* eslint-disable no-undef */
-const { initializeApp } = require("firebase/app");
-const { getDatabase } = require("firebase/database");
+import firebase from 'firebase-admin';
+const cert = firebase.credential.cert;
+// eslint-disable-next-line no-undef
+const serviceAccount = JSON.parse(process.env.SERVICE_ACCOUNT)
+firebase.initializeApp({
+    credential: cert(serviceAccount),
+    databaseURL: 'https://tjo-database-365a3-default-rtdb.firebaseio.com'
+});
 
-// See: https://firebase.google.com/docs/web/learn-more#config-object
-const firebaseConfig = {
-    databaseURL: "https://tjo-database-365a3-default-rtdb.firebaseio.com",
-};
+async function queryReference(databaseReference) {
+    return (databaseReference.once("value").then((snapshot) => {
+        console.log(databaseReference.ref, snapshot.val())
+        return snapshot.val()
+    }))
+}
 
-const app = initializeApp(process.env.SERVICE_ACCOUNT,"bot/v1");
-
-const database = getDatabase(app);
-
-module.exports = {
-    db: database
-};
-
+export const db = firebase.database;
+export const query = queryReference;
