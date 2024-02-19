@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "npm install --production --silent && node index.js",
+    "start": "npm install --production && node index.js",
     "test": "npm install && node index.js"
   },
   "dependencies": {
