@@ -7,7 +7,7 @@ const firebaseConfig = {
     databaseURL: "https://tjo-database-365a3-default-rtdb.firebaseio.com",
 };
 
-const app = initializeApp(process.env.SERVICE_ACCOUNT);
+const app = initializeApp(process.env.SERVICE_ACCOUNT,"bot/v1");
 
 const database = getDatabase(app);
 
