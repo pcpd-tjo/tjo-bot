@@ -6,7 +6,6 @@ export const getPlayerCrystals = async (userID) => {
   const playerRefPath = getPlayerCrystalRef(userID);
   const crystalsRef = db().ref(playerRefPath);
   return (query(crystalsRef).then(function (crystals) {
-    console.log(crystals);
     return crystals
   }))
 }

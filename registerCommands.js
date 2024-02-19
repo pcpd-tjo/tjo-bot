@@ -5,6 +5,9 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
 import { clientId } from "./config.js";
+import { config } from 'dotenv';
+config({ path: '../.env' });
+
 const { TOKEN } = process.env;
 export const register = async () => {
     let commands = [];
@@ -19,6 +22,7 @@ export const register = async () => {
         const filePath = join(commandsPath, file);
         try {
             const { default: command } = await import(`./commands/${file}`)
+            console.log(command)
             if (command.data) {
                 commands.push(command.data);
             } else {
@@ -48,3 +52,4 @@ export const register = async () => {
         }
     })();
 }
+register()

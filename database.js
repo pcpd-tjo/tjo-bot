@@ -9,7 +9,7 @@ firebase.initializeApp({
 
 async function queryReference(databaseReference) {
     return (databaseReference.once("value").then((snapshot) => {
-        console.log(databaseReference.ref, snapshot.val())
+        //console.log(databaseReference.ref, snapshot.val())
         return snapshot.val()
     }))
 }
