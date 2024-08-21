@@ -1,7 +1,7 @@
 {
   "scripts": {
     "prestart": "npm install --omit=dev",
-    "start": "npm run prestart && nodemon index.js",
+    "start": "npm run prestart && npm run updateCommands && node index.js",
     "dev": "node index.js",
     "updateCommands": "node registerCommands.js"
   },
