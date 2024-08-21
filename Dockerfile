@@ -16,7 +16,7 @@ ENV NODE_ENV=production
 WORKDIR /usr/src/bot
 COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
 COPY . .
-EXPOSE 3000
+EXPOSE 4002
 
 RUN apt-get update -y
 RUN apt-get install -y python3
